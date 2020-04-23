@@ -1,0 +1,68 @@
+# Default values for peak6.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: ${min_replicas}
+hpa:
+  maxReplicas: ${max_replicas}
+  minReplicas: ${min_replicas}
+
+image:
+  repository: ${docker_repository}
+  tag: ${docker_repository_tag}
+  pullPolicy: Always
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: fsadykov-prod
+
+  path: /
+  hosts:
+    - ${deployment_endpoint}
+  tls:
+   - secretName: peak6-tls
+     hosts:
+       - ${deployment_endpoint}
+
+
+globalEnvironments:
+  enabled: true
+  environments:
+  - name: NAMESPACE
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.namespace
+
+  - name: RELEASE
+    value: ${docker_repository_tag}
+
+  - name: INSTANCE
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
