@@ -18,7 +18,7 @@ variable "deployment_endpoint" {
   description = "Endpoint for the application"
 
   default = {
-    dev  = "dev.peak6.fsadykov.com"
+    dev  = "dev-example.peak6.fsadykov.com"
     qa   = "qa.peak6.fsadykov.com"
     prod = "peak6.fsadykov.com"
   }
